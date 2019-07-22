@@ -217,6 +217,7 @@ cumulus_subnet_internet:
   gateway_ip: "128.232.225.254"
   allocation_pool_start: "128.232.224.84"
   allocation_pool_end: "128.232.224.91"
+  enable_dhcp: false
   dns_nameservers:
     - 131.111.8.42
     - 131.111.12.20
@@ -293,31 +294,31 @@ cumulus_subnet_demo_vxlan:
 # then, you can use the issue-34467 branch of the stackhpc ansible repo to
 # register groups (after uncommenting them):
 # https://github.com/stackhpc/ansible/tree/issue-34467.
-cumulus_security_groups:
-  - name: allow-ssh
-    rules:
-      - protocol: tcp
-        port_range_min: 22
-        port_range_max: 22
-    project: admin
-  - name: default
-    rules:
-      - protocol: tcp
-        port_range_min: 22
-        port_range_max: 22
-    project: services
-  - name: allow-https
-    rules:
-      - protocol: tcp
-        port_range_min: 443
-        port_range_max: 443
-    project: services
-  - name: allow-http
-    rules:
-      - protocol: tcp
-        port_range_min: 80
-        port_range_max: 80
-    project: services
+#cumulus_security_groups:
+#  - name: allow-ssh
+#    rules:
+#      - protocol: tcp
+#        port_range_min: 22
+#        port_range_max: 22
+#    project: admin
+#  - name: default
+#    rules:
+#      - protocol: tcp
+#        port_range_min: 22
+#        port_range_max: 22
+#    project: services
+#  - name: allow-https
+#    rules:
+#      - protocol: tcp
+#        port_range_min: 443
+#        port_range_max: 443
+#    project: services
+#  - name: allow-http
+#    rules:
+#      - protocol: tcp
+#        port_range_min: 80
+#        port_range_max: 80
+#    project: services
 
 ###############################################################################
 # Configuration of nova flavors for cumulus.
