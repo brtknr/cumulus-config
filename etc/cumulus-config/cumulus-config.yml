@@ -321,8 +321,8 @@ cumulus_router_provision:
       - net: "{{ cumulus_network_internal_name }}"
         subnet: "{{ cumulus_network_internal_name }}"
         portip: "10.225.0.2"
-      - net: "provision-net"
-        subnet: "provision-net"
+      - net: "provisioning-net"
+        subnet: "provisioning-net"
         portip: "10.231.0.1"
 
 cumulus_router_cleaning:
