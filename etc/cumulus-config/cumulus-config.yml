@@ -284,6 +284,16 @@ cumulus_subnet_demo_vxlan:
   dns_nameservers:
     - 8.8.8.8
 
+cumulus_routers:
+  - "{{ cumulus_router_demo }}"
+
+cumulus_router_demo:
+  - name: "{{ cumulus_demo_project.name }}"
+    project: "{{ cumulus_demo_project.name }}"
+    interfaces:
+      - "{{ cumulus_network_demo_vxlan_name }}"
+    network: "{{ cumulus_network_internet_name }}"
+
 # List of security groups in the cumulus demo project. Format is as required by the
 # stackhpc.os-networks role.
 # FIXME: Security group rules cannot be assigned to another project, due to
