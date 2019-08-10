@@ -198,6 +198,7 @@ cumulus_networks:
   - "{{ cumulus_network_ilab }}"
   - "{{ cumulus_network_internal }}"
   - "{{ cumulus_network_demo_vxlan }}"
+  - "{{ cumulus_network_inspection }}"
 
 cumulus_network_internet_name: "internet"
 cumulus_network_internet:
@@ -284,8 +285,68 @@ cumulus_subnet_demo_vxlan:
   dns_nameservers:
     - 8.8.8.8
 
+# cumulus inspection network name.
+cumulus_network_inspection_name: "inspection-net"
+
+# cumulus inspection network.
+cumulus_network_inspection:
+  name: "{{ cumulus_network_inspection_name }}"
+  project: "admin"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 310
+  shared: false
+  # Subnet configuration.
+  subnets:
+    - "{{ cumulus_subnet_inspection }}"
+
+# cumulus inspection subnet.
+cumulus_subnet_inspection:
+  name: "{{ cumulus_network_inspection_name }}"
+  project: "admin"
+  cidr: "10.230.0.0/16"
+  enable_dhcp: false
+  allocation_pool_start: "10.230.0.1"
+  allocation_pool_end: "10.230.0.1"
+
 cumulus_routers:
   - "{{ cumulus_router_demo }}"
+  - "{{ cumulus_router_provision }}"
+  - "{{ cumulus_router_cleaning }}"
+  - "{{ cumulus_router_inspection }}"
+
+cumulus_router_provision:
+  - name: "provision-router"
+    project: "admin"
+    interfaces:
+      - net: "{{ cumulus_network_internal_name }}"
+        subnet: "{{ cumulus_network_internal_name }}"
+        portip: "10.225.0.2"
+      - net: "provision-net"
+        subnet: "provision-net"
+        portip: "10.231.0.1"
+
+cumulus_router_cleaning:
+  - name: "cleaning-router"
+    project: "admin"
+    interfaces:
+      - net: "{{ cumulus_network_internal_name }}"
+        subnet: "{{ cumulus_network_internal_name }}"
+        portip: "10.225.0.3"
+      - net: "cleaning-net"
+        subnet: "cleaning-net"
+        portip: "10.233.0.1"
+
+cumulus_router_inspection:
+  - name: "inspection-router"
+    project: "admin"
+    interfaces:
+      - net: "{{ cumulus_network_internal_name }}"
+        subnet: "{{ cumulus_network_internal_name }}"
+        portip: "10.225.0.4"
+      - net: "inspection-net"
+        subnet: "inspection-net"
+        portip: "10.230.0.1"
 
 cumulus_router_demo:
   - name: "{{ cumulus_demo_project.name }}"
