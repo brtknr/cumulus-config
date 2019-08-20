@@ -395,6 +395,7 @@ cumulus_flavors:
   - "{{ cumulus_flavor_general_medium }}"
   - "{{ cumulus_flavor_general_small }}"
   - "{{ cumulus_flavor_general_tiny }}"
+  - "{{ cumulus_flavor_baremetal_general }}"
 
 cumulus_flavor_general_xlarge:
   name: "general.v1.xlarge"
@@ -447,8 +448,8 @@ cumulus_flavor_general_tiny:
 cumulus_flavor_baremetal_general:
   name: "bm.general"
   ram: 196608
-  disk: 480
-  vcpus: 64
+  disk: 100
+  vcpus: 32
   extra_specs:
     "resources:CUSTOM_BAREMETAL_A": 1
     "resources:VCPU": 0
