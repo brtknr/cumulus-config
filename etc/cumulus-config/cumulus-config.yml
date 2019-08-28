@@ -195,6 +195,7 @@ cumulus_unlimited_quotas:
 # stackhpc.os-networks role.
 cumulus_networks:
   - "{{ cumulus_network_internet }}"
+  - "{{ cumulus_network_provider }}"
   - "{{ cumulus_network_ilab }}"
   - "{{ cumulus_network_internal }}"
   - "{{ cumulus_network_demo_vxlan }}"
@@ -219,6 +220,28 @@ cumulus_subnet_internet:
   allocation_pool_start: "128.232.224.84"
   allocation_pool_end: "128.232.224.91"
   enable_dhcp: false
+  dns_nameservers:
+    - 131.111.8.42
+    - 131.111.12.20
+
+cumulus_network_provider_name: "provider-318"
+cumulus_network_provider:
+  name: "{{ cumulus_network_provider_name }}"
+  project: "admin"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 318
+  shared: true
+  external: false
+  subnets:
+    - "{{ cumulus_subnet_provider }}"
+cumulus_subnet_provider:
+  name: "{{ cumulus_network_provider_name }}"
+  project: "admin"
+  cidr: "10.238.0.0/16"
+  gateway_ip: "10.238.0.1"
+  allocation_pool_start: "10.238.215.100"
+  allocation_pool_end: "10.238.215.199"
   dns_nameservers:
     - 131.111.8.42
     - 131.111.12.20
