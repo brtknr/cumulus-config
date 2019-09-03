@@ -336,7 +336,6 @@ cumulus_unlimited_quotas:
 # stackhpc.os-networks role.
 cumulus_networks:
   - "{{ cumulus_network_internet }}"
-  - "{{ cumulus_network_ilab }}"
   - "{{ cumulus_network_internal }}"
   - "{{ cumulus_network_storage }}"
   - "{{ cumulus_network_demo_vxlan }}"
@@ -355,7 +354,6 @@ cumulus_network_internet:
     - "{{ cumulus_subnet_internet }}"
     - "{{ cumulus_subnet_internet2 }}"
 
-# cumulus external subnet.
 cumulus_subnet_internet:
   name: "{{ cumulus_network_internet_name }}"
   project: "admin"
@@ -367,7 +365,6 @@ cumulus_subnet_internet:
     - 131.111.8.42
     - 131.111.12.20
 
-# cumulus external subnet.
 cumulus_subnet_internet2:
   name: "internet2"
   project: "admin"
@@ -380,36 +377,6 @@ cumulus_subnet_internet2:
     - 131.111.8.42
     - 131.111.12.20
 
-# cumulus external network name.
-cumulus_network_ilab_name: "ilab-215"
-
-# cumulus external network. This represents a network that is accessible on
-# ilab gate.
-cumulus_network_ilab:
-  name: "{{ cumulus_network_ilab_name }}"
-  project: "admin"
-  provider_network_type: "vlan"
-  provider_physical_network: "physnet1"
-  provider_segmentation_id: 215
-  shared: false
-  external: true
-  # Subnet configuration.
-  subnets:
-    - "{{ cumulus_subnet_external }}"
-
-# cumulus external subnet.
-cumulus_subnet_external:
-  name: "{{ cumulus_network_ilab_name }}"
-  project: "admin"
-  cidr: "10.215.0.0/16"
-  gateway_ip: "10.215.0.2"
-  allocation_pool_start: "10.215.215.100"
-  allocation_pool_end: "10.215.215.199"
-  dns_nameservers:
-    - 131.111.8.42
-    - 131.111.12.20
-  # TODO: Add host route to storage subnet.
-
 # cumulus internal network name.
 cumulus_network_internal_name: "cumulus-internal"
 
@@ -421,8 +388,7 @@ cumulus_network_internal:
   provider_physical_network: "physnet1"
   provider_segmentation_id: 218
   shared: true
-  external: false
-  # Subnet configuration.
+  external: true
   subnets:
     - "{{ cumulus_subnet_internal }}"
 
@@ -438,8 +404,6 @@ cumulus_subnet_internal:
     - 131.111.8.42
     - 131.111.12.20
   host_routes:
-    - destination: "{{ cumulus_subnet_external.cidr }}"
-      nexthop: 10.218.0.2
     - destination: "{{ cumulus_subnet_storage.cidr }}"
       nexthop: 10.218.0.3
 
@@ -612,82 +576,28 @@ cumulus_subnet_infiniband:
 cumulus_routers:
   - "{{ cumulus_router_internet }}"
   - "{{ cumulus_router_demo }}"
-  - "{{ cumulus_router_internal_to_ilab }}"
   - "{{ cumulus_router_internal_to_storage }}"
 
+# Connect internal network to the internet network
 cumulus_router_internet:
-  - name: "internal-to-internet"
+  - name: "internet"
     project: "admin"
     interfaces:
-      - "{{ cumulus_network_internal_name }}"
-      # This is the gateway for the cumulus_network_ilab_name
-      - net: "{{ cumulus_network_ilab_name }}"
-        subnet: "{{ cumulus_network_ilab_name }}"
-        portip: 10.215.0.2
       - net: "{{ cumulus_network_internal_name }}"
         subnet: "{{ cumulus_network_internal_name }}"
         portip: 10.218.0.1
     network: "{{ cumulus_network_internet_name }}"
-
-# cumulus bare metal provisioning router.
-cumulus_router_provision:
-  - name: "provision"
-    project: "admin"
-    interfaces:
-      - net: "{{ cumulus_network_internal_name }}"
-        subnet: "{{ cumulus_network_internal_name }}"
-        portip: "10.65.0.2"
-      - net: "provision-net"
-        subnet: "provision-net"
-        portip: "10.69.0.1"
-
-# cumulus bare metal cleaning router.
-cumulus_router_cleaning:
-  - name: "cleaning"
-    project: "admin"
-    interfaces:
-      - net: "{{ cumulus_network_internal_name }}"
-        subnet: "{{ cumulus_network_internal_name }}"
-        portip: "10.65.0.3"
-      - net: "cleaning-net"
-        subnet: "cleaning-net"
-        portip: "10.70.0.1"
-
-# cumulus bare metal inspection router.
-cumulus_router_inspection:
-  - name: "inspection"
-    project: "admin"
-    interfaces:
-      - net: "{{ cumulus_network_internal_name }}"
-        subnet: "{{ cumulus_network_internal_name }}"
-        portip: "10.65.0.4"
-      - net: "inspection-net"
-        subnet: "inspection-net"
-        portip: "10.71.0.1"
 
 # cumulus demo router.
 cumulus_router_demo:
   - name: "{{ cumulus_demo_project.name }}"
     project: "{{ cumulus_demo_project.name }}"
     interfaces:
-      #- "{{ cumulus_network_demo_vlan_name }}"
       - "{{ cumulus_network_demo_vxlan_name }}"
-      #- "{{ cumulus_network_demo_hs_vlan_name }}"
-      #- "{{ cumulus_network_demo_provider_name }}"
-    network: "{{ cumulus_network_ilab_name }}"
-
-# Connects the internal network to ilab
-cumulus_router_internal_to_ilab:
-  - name: internal-to-ilab
-    project: admin
-    interfaces:
-      - net: "{{ cumulus_network_internal_name }}"
-        subnet: "{{ cumulus_network_internal_name }}"
-        portip: "10.218.0.2"
-    network: "{{ cumulus_network_ilab_name }}"
+    network: "{{ cumulus_network_internal_name }}"
 
 cumulus_router_internal_to_storage:
-  - name: internal-to-storage
+  - name: storage
     project: admin
     interfaces:
       - net: "{{ cumulus_network_internal_name }}"
