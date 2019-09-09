@@ -327,6 +327,7 @@ cumulus_subnet_inspection:
 
 cumulus_routers:
   - "{{ cumulus_router_demo }}"
+  - "{{ cumulus_router_provider_218 }}"
   - "{{ cumulus_router_provision }}"
   - "{{ cumulus_router_cleaning }}"
   - "{{ cumulus_router_inspection }}"
@@ -336,6 +337,13 @@ cumulus_router_demo:
     project: "{{ cumulus_demo_project.name }}"
     interfaces:
       - "{{ cumulus_network_demo_vxlan_name }}"
+    network: "{{ cumulus_network_internet_name }}"
+
+cumulus_router_provider_218:
+  - name: "provider-218-router"
+    project: "admin"
+    interfaces:
+      - "{{ cumulus_network_provider_name }}"
     network: "{{ cumulus_network_internet_name }}"
 
 cumulus_router_provision:
@@ -492,16 +500,16 @@ cumulus_images:
   - "{{ cumulus_openSUSE_leap_15 }}"
 
 cumulus_fedora_atomic_29:
-  name: "FedoraAtomic29-20190429"
-  image_url: "https://ftp.icm.edu.pl/pub/Linux/dist/fedora-alt/atomic/stable/Fedora-29-updates-20190429.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20190429.0.x86_64.qcow2"
+  name: "FedoraAtomic29-20190820"
+  image_url: "https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-29-updates-20190820.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20190820.0.x86_64.qcow2"
   properties:
     os_type: "linux"
     os_distro: "fedora-atomic"
     os_version: "29"
 
 cumulus_centos_7:
-  name: "CentOS7-1901"
-  image_url: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1901.qcow2"
+  name: "CentOS7-1907"
+  image_url: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
   properties:
     os_type: "linux"
     os_distro: "centos"
@@ -520,12 +528,12 @@ cumulus_cirros:
     os_version: "0.4.0"
 
 cumulus_debian_9:
-  name: "Debian-Stretch-9.9.4"
-  image_url: "https://cdimage.debian.org/cdimage/cloud/OpenStack/current-9/debian-9-openstack-amd64.qcow2"
+  name: "Debian-Stretch-9.11.0"
+  image_url: "https://cdimage.debian.org/cdimage/openstack/9.11.0/debian-9.11.0-openstack-amd64.qcow2"
   properties:
     os_type: "linux"
     os_distro: "debian"
-    os_version: "9.9.4"
+    os_version: "9.11.0"
 
 cumulus_fedora_30:
   name: "Fedora-30-1.2"
@@ -536,8 +544,8 @@ cumulus_fedora_30:
     os_version: "30"
 
 cumulus_ubuntu_18_04:
-  name: "Ubuntu-Bionic-18.04-20190718"
-  image_url: "https://cloud-images.ubuntu.com/bionic/20190718/bionic-server-cloudimg-amd64.img"
+  name: "Ubuntu-Bionic-18.04-20190905"
+  image_url: "https://cloud-images.ubuntu.com/bionic/20190905/bionic-server-cloudimg-amd64.img"
   properties:
     os_type: "linux"
     os_distro: "ubuntu"
@@ -637,7 +645,7 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   external_network: "{{ cumulus_network_ilab_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190429"
+  image: "FedoraAtomic29-20190820"
   name: "swarm"
   coe: "swarm-mode"
   network_driver: "docker"
@@ -647,12 +655,12 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
 cumulus_container_clusters_template_k8s_14:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,prometheus_monitoring=true,kube_tag=v1.14.3,cloud_provider_tag=v1.14.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0"
   external_network: "{{ cumulus_network_ilab_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190429"
-  name: "kubernetes-1.14.3"
+  image: "FedoraAtomic29-20190820"
+  name: "kubernetes-1.14.6"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
@@ -661,12 +669,12 @@ cumulus_container_clusters_template_k8s_14:
 cumulus_container_clusters_template_k8s_15:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,prometheus_monitoring=true,kube_tag=v1.15.0,cloud_provider_tag=v1.15.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.15.3,cloud_provider_tag=v1.15.0"
   external_network: "{{ cumulus_network_ilab_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190429"
-  name: "kubernetes-1.15.0"
+  image: "FedoraAtomic29-20190820"
+  name: "kubernetes-1.15.3"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
