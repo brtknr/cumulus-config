@@ -642,7 +642,7 @@ cumulus_container_clusters_templates:
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
   public:
   floating-ip-disabled:
-  external_network: "{{ cumulus_network_ilab_name }}"
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
@@ -656,7 +656,7 @@ cumulus_container_clusters_template_k8s_14:
   public:
   floating-ip-disabled:
   labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0"
-  external_network: "{{ cumulus_network_ilab_name }}"
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
@@ -670,7 +670,7 @@ cumulus_container_clusters_template_k8s_15:
   public:
   floating-ip-disabled:
   labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.15.3,cloud_provider_tag=v1.15.0"
-  external_network: "{{ cumulus_network_ilab_name }}"
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
