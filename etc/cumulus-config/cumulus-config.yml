@@ -209,6 +209,7 @@ cumulus_networks:
   - "{{ cumulus_network_internal }}"
   - "{{ cumulus_network_demo_vxlan }}"
   - "{{ cumulus_network_inspection }}"
+  - "{{ cumulus_network_octavia }}"
 
 cumulus_network_internet_name: "internet"
 cumulus_network_internet:
@@ -334,6 +335,24 @@ cumulus_subnet_inspection:
   allocation_pool_start: "10.230.0.1"
   allocation_pool_end: "10.230.0.1"
 
+cumulus_network_octavia_name: "octavia-net"
+cumulus_network_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 303
+  shared: false
+  subnets:
+    - "{{ cumulus_subnet_octavia }}"
+cumulus_subnet_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  cidr: "10.228.0.0/16"
+  enable_dhcp: true
+  allocation_pool_start: "10.228.0.1"
+  allocation_pool_end: "10.228.0.254"
+
 cumulus_routers:
   - "{{ cumulus_router_demo }}"
   - "{{ cumulus_router_provider_218 }}"
@@ -430,12 +449,20 @@ cumulus_router_inspection:
 # List of nova flavors in the cumulus demo project. Format is as required by the
 # stackhpc.os-flavors role.
 cumulus_flavors:
+  - "{{ cumulus_flavor_octavia_small }}"
   - "{{ cumulus_flavor_general_xlarge }}"
   - "{{ cumulus_flavor_general_large }}"
   - "{{ cumulus_flavor_general_medium }}"
   - "{{ cumulus_flavor_general_small }}"
   - "{{ cumulus_flavor_general_tiny }}"
   - "{{ cumulus_flavor_baremetal_general }}"
+
+cumulus_flavor_octavia_small:
+  name: "octavia.small"
+  ram: 1024
+  disk: 20
+  vcpus: 1
+  public: false
 
 cumulus_flavor_general_xlarge:
   name: "general.v1.xlarge"
