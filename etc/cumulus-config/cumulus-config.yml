@@ -462,7 +462,7 @@ cumulus_flavor_octavia_small:
   ram: 1024
   disk: 20
   vcpus: 1
-  public: false
+  is_public: false
 
 cumulus_flavor_general_xlarge:
   name: "general.v1.xlarge"
