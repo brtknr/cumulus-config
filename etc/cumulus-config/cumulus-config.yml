@@ -132,6 +132,15 @@ cumulus_resops_users:
       3362373830376638620a363134623933613764666534356334663032326434396131346133633161
       64303731656662353630396464313164356337396265316234343031656431613865
     roles: "{{ cumulus_user_roles }}"
+  - name: bharat-admin
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62336564663333613636643062623462613761396430393133343832613236316137353334313261
+      3037623738613633336261636138343563303739633366310a383535373931653939393736326636
+      34646462383766653336313039613963333230663932343763393832663765613935623730663365
+      3362373830376638620a363134623933613764666534356334663032326434396131346133633161
+      64303731656662353630396464313164356337396265316234343031656431613865
+    roles: "{{ cumulus_admin_roles }}"
   - name: stig
     password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
@@ -697,7 +706,7 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
 cumulus_container_clusters_template_k8s_14:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agent_tag=train-dev,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-dev,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0"
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
