@@ -417,13 +417,20 @@ cumulus_router_inspection:
 # then, you can use the issue-34467 branch of the stackhpc ansible repo to
 # register groups (after uncommenting them):
 # https://github.com/stackhpc/ansible/tree/issue-34467.
-#cumulus_security_groups:
-#  - name: allow-ssh
-#    rules:
-#      - protocol: tcp
-#        port_range_min: 22
-#        port_range_max: 22
-#    project: admin
+cumulus_security_groups:
+  - name: octavia-sg
+    rules:
+      - protocol: tcp
+        port_range_min: 5555
+        port_range_max: 5555
+        remote_ip_prefix: "0.0.0.0/0"
+      - protocol: tcp
+        port_range_min: 9443
+        port_range_max: 9443
+        remote_ip_prefix: "0.0.0.0/0"
+      - protocol: icmp
+        remote_ip_prefix: "0.0.0.0/0"
+    project: admin
 #  - name: default
 #    rules:
 #      - protocol: tcp
