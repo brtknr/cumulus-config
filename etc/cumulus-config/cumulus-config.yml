@@ -757,7 +757,7 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
 cumulus_container_clusters_template_k8s_14:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-dev,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-dev,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0,master_lb_enabled=true,master_lb_floating_ip_enabled=true"
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
