@@ -9,6 +9,7 @@
 # role.
 cumulus_projects:
   - "{{ cumulus_demo_project }}"
+  - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_services_project }}"
   - "{{ cumulus_tempest_project }}"
   - "{{ cumulus_tempest_alt_project }}"
@@ -38,6 +39,14 @@ cumulus_demo_project:
   project_domain: default
   user_domain: default
   users: "{{ cumulus_resops_users }}"
+  quotas: "{{ cumulus_unlimited_quotas }}"
+
+cumulus_rcp_dev_project:
+  name: rcp-dev
+  description: Cumulus @ Cambridge rcp-dev
+  project_domain: default
+  user_domain: default
+  users: "{{ cumulus_rcpdev_users }}"
   quotas: "{{ cumulus_unlimited_quotas }}"
 
 # Definition of the cumulus service project. Format is as required by the
@@ -90,6 +99,44 @@ cumulus_tempest_alt_project:
       roles: "{{ cumulus_user_roles }}"
   quotas: "{{ cumulus_unlimited_quotas }}"
 
+cumulus_rcpdev_users:
+  - name: mcs94
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      31313232343763313538333464613062353037623266643033303965613238366435323532663862
+      3362396339333231326261613430333761626531333335660a353466306339376665646333343265
+      38353361393231656465623033316238333031643861353739306437316532623561363636313133
+      6336646438663533330a316232353234393162333433623761303738383730663166353838613863
+      3032
+    roles: "{{ cumulus_user_roles }}"
+  - name: mjr208
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62343664353739383731303962333666623036343264306564653830366164366434373162353139
+      3235326438653132303062656639613266373531636661300a303331643731323566346639323661
+      37353361393466366134333532626461656266613236633034363538626261346638306435313762
+      3034366138333561390a663038643739656331303666316539326132353337643964626461393939
+      30666330623965643333653134623230333038383138666338366564636538376631
+    roles: "{{ cumulus_user_roles }}"
+  - name: wjt27
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      34383637326463383561613539383432316132623030386632653530366563383263356630316536
+      6332383737643061343732646338643437303631666634640a376533336430373930333334376133
+      38383837343865626365663265616333646663303836666438366234653361333730313533653064
+      3366376433303132380a613366636435333639346466323063353161653361613836636437323166
+      3938
+    roles: "{{ cumulus_user_roles }}"
+  - name: sjr20
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      31653332663033356136383365376339383339326662353436316163356266323333366635386466
+      3961636666376439633164643962393531383566393432380a653131316163633837643730396666
+      39616332346463666563626236366237326539333966333139643664626331313033666631396334
+      3565303239376162370a363764363164616466653262653632363636313535326464386232636431
+      3135
+    roles: "{{ cumulus_user_roles }}"
+
 # List of users in the cumulus ResOps team. Format is as required by the
 # stackhpc.os-projects role.
 cumulus_resops_users:
@@ -132,6 +179,15 @@ cumulus_resops_users:
       3362373830376638620a363134623933613764666534356334663032326434396131346133633161
       64303731656662353630396464313164356337396265316234343031656431613865
     roles: "{{ cumulus_user_roles }}"
+  - name: bharat-admin
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62336564663333613636643062623462613761396430393133343832613236316137353334313261
+      3037623738613633336261636138343563303739633366310a383535373931653939393736326636
+      34646462383766653336313039613963333230663932343763393832663765613935623730663365
+      3362373830376638620a363134623933613764666534356334663032326434396131346133633161
+      64303731656662353630396464313164356337396265316234343031656431613865
+    roles: "{{ cumulus_admin_roles }}"
   - name: stig
     password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
@@ -209,6 +265,7 @@ cumulus_networks:
   - "{{ cumulus_network_internal }}"
   - "{{ cumulus_network_demo_vxlan }}"
   - "{{ cumulus_network_inspection }}"
+  - "{{ cumulus_network_octavia }}"
 
 cumulus_network_internet_name: "internet"
 cumulus_network_internet:
@@ -334,6 +391,24 @@ cumulus_subnet_inspection:
   allocation_pool_start: "10.230.0.1"
   allocation_pool_end: "10.230.0.1"
 
+cumulus_network_octavia_name: "octavia-net"
+cumulus_network_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 303
+  shared: false
+  subnets:
+    - "{{ cumulus_subnet_octavia }}"
+cumulus_subnet_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  cidr: "10.228.0.0/16"
+  enable_dhcp: true
+  allocation_pool_start: "10.228.0.1"
+  allocation_pool_end: "10.228.0.254"
+
 cumulus_routers:
   - "{{ cumulus_router_demo }}"
   - "{{ cumulus_router_provider_218 }}"
@@ -398,13 +473,24 @@ cumulus_router_inspection:
 # then, you can use the issue-34467 branch of the stackhpc ansible repo to
 # register groups (after uncommenting them):
 # https://github.com/stackhpc/ansible/tree/issue-34467.
-#cumulus_security_groups:
-#  - name: allow-ssh
-#    rules:
-#      - protocol: tcp
-#        port_range_min: 22
-#        port_range_max: 22
-#    project: admin
+cumulus_security_groups:
+  - name: octavia-sg
+    rules:
+      - protocol: tcp
+        port_range_min: 5555
+        port_range_max: 5555
+        remote_ip_prefix: "0.0.0.0/0"
+      - protocol: tcp
+        port_range_min: 9443
+        port_range_max: 9443
+        remote_ip_prefix: "0.0.0.0/0"
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: "10.228.0.0/30"
+      - protocol: icmp
+        remote_ip_prefix: "0.0.0.0/0"
+    project: admin
 #  - name: default
 #    rules:
 #      - protocol: tcp
@@ -430,12 +516,20 @@ cumulus_router_inspection:
 # List of nova flavors in the cumulus demo project. Format is as required by the
 # stackhpc.os-flavors role.
 cumulus_flavors:
+  - "{{ cumulus_flavor_octavia_small }}"
   - "{{ cumulus_flavor_general_xlarge }}"
   - "{{ cumulus_flavor_general_large }}"
   - "{{ cumulus_flavor_general_medium }}"
   - "{{ cumulus_flavor_general_small }}"
   - "{{ cumulus_flavor_general_tiny }}"
   - "{{ cumulus_flavor_baremetal_general }}"
+
+cumulus_flavor_octavia_small:
+  name: "octavia.small"
+  ram: 1024
+  disk: 20
+  vcpus: 1
+  is_public: false
 
 cumulus_flavor_general_xlarge:
   name: "general.v1.xlarge"
@@ -645,8 +739,9 @@ cumulus_systemd_modules_load_ipoib: |
 
 cumulus_container_clusters_templates:
   - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
-  - "{{ cumulus_container_clusters_template_k8s_14 }}"
-  - "{{ cumulus_container_clusters_template_k8s_15 }}"
+  - "{{ cumulus_container_clusters_template_k8s_146 }}"
+  - "{{ cumulus_container_clusters_template_k8s_147 }}"
+  - "{{ cumulus_container_clusters_template_k8s_148 }}"
 
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
   public:
@@ -661,29 +756,46 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_14:
+cumulus_container_clusters_template_k8s_146:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.14.6"
+  name: "kubernetes-1.14.6_as"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_15:
+cumulus_container_clusters_template_k8s_147:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agnet_tag=stein-stable,kube_tag=v1.15.3,cloud_provider_tag=v1.15.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.7,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.15.3"
+  name: "kubernetes-1.14.7_as"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+
+cumulus_container_clusters_template_k8s_148:
+  public:
+  floating-ip-disabled:
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20190820"
+  name: "kubernetes-1.14.8_as"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
