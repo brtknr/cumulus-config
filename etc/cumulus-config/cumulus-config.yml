@@ -406,6 +406,7 @@ cumulus_networks:
   - "{{ cumulus_network_demo_vxlan }}"
   - "{{ cumulus_network_api }}"
   - "{{ cumulus_network_inspection }}"
+  - "{{ cumulus_network_octavia }}"
 
 cumulus_network_internet_name: "internet"
 cumulus_network_internet:
@@ -541,6 +542,24 @@ cumulus_subnet_inspection:
   allocation_pool_start: "10.210.0.1"
   allocation_pool_end: "10.210.0.1"
 
+cumulus_network_octavia_name: "octavia-net"
+cumulus_network_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 208
+  shared: false
+  subnets:
+    - "{{ cumulus_subnet_octavia }}"
+cumulus_subnet_octavia:
+  name: "{{ cumulus_network_octavia_name }}"
+  project: "admin"
+  cidr: "10.208.0.0/16"
+  enable_dhcp: true
+  allocation_pool_start: "10.208.0.1"
+  allocation_pool_end: "10.208.0.254"
+
 ## List of routers
 cumulus_routers:
   - "{{ cumulus_router_internet }}"
@@ -620,30 +639,41 @@ cumulus_router_inspection:
 # register groups (after uncommenting them):
 # https://github.com/stackhpc/ansible/tree/issue-34467.
 cumulus_security_groups:
-  - name: allow-ssh
+  - name: octavia-sg
     rules:
+      - protocol: tcp
+        port_range_min: 5555
+        port_range_max: 5555
+        remote_ip_prefix: "0.0.0.0/0"
+      - protocol: tcp
+        port_range_min: 9443
+        port_range_max: 9443
+        remote_ip_prefix: "0.0.0.0/0"
       - protocol: tcp
         port_range_min: 22
         port_range_max: 22
+        remote_ip_prefix: "10.208.0.0/30"
+      - protocol: icmp
+        remote_ip_prefix: "0.0.0.0/0"
     project: admin
-  - name: default
-    rules:
-      - protocol: tcp
-        port_range_min: 22
-        port_range_max: 22
-    project: services
-  - name: allow-https
-    rules:
-      - protocol: tcp
-        port_range_min: 443
-        port_range_max: 443
-    project: services
-  - name: allow-http
-    rules:
-      - protocol: tcp
-        port_range_min: 80
-        port_range_max: 80
-    project: services
+#  - name: default
+#  #    rules:
+#  #      - protocol: tcp
+#  #        port_range_min: 22
+#  #        port_range_max: 22
+#  #    project: services
+#  #  - name: allow-https
+#  #    rules:
+#  #      - protocol: tcp
+#  #        port_range_min: 443
+#  #        port_range_max: 443
+#  #    project: services
+#  #  - name: allow-http
+#  #    rules:
+#  #      - protocol: tcp
+#  #        port_range_min: 80
+#  #        port_range_max: 80
+#  #    project: services
 
 ###############################################################################
 # Configuration of nova flavors for cumulus.
@@ -651,6 +681,7 @@ cumulus_security_groups:
 # List of nova flavors in the cumulus demo project. Format is as required by the
 # stackhpc.os-flavors role.
 cumulus_flavors:
+  - "{{ cumulus_flavor_octavia_small }}"
   - "{{ cumulus_flavor_general_xlarge }}"
   - "{{ cumulus_flavor_general_large }}"
   - "{{ cumulus_flavor_general_medium }}"
@@ -658,6 +689,13 @@ cumulus_flavors:
   - "{{ cumulus_flavor_general_tiny }}"
   - "{{ cumulus_flavor_lsst_medium }}"
   - "{{ cumulus_flavor_bm_dirac25y }}"
+
+cumulus_flavor_octavia_small:
+  name: "octavia.small"
+  ram: 1024
+  disk: 20
+  vcpus: 1
+  is_public: false
 
 cumulus_flavor_general_xlarge:
   name: "general.v1.xlarge"
@@ -876,13 +914,14 @@ cumulus_systemd_modules_load_ipoib: |
 
 cumulus_container_clusters_templates:
   - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
-  - "{{ cumulus_container_clusters_template_k8s_14 }}"
-  - "{{ cumulus_container_clusters_template_k8s_15 }}"
+  - "{{ cumulus_container_clusters_template_k8s_146 }}"
+  - "{{ cumulus_container_clusters_template_k8s_147 }}"
+  - "{{ cumulus_container_clusters_template_k8s_148 }}"
 
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
   public:
   floating-ip-disabled:
-  external_network: "{{ cumulus_network_internal_name }}"
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
@@ -892,29 +931,46 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_14:
+cumulus_container_clusters_template_k8s_146:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agent_tag=train-dev,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0"
-  external_network: "{{ cumulus_network_internal_name }}"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.14.6"
+  name: "kubernetes-1.14.6_as"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_15:
+cumulus_container_clusters_template_k8s_147:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,prometheus_monitoring=false,heat_container_agent_tag=train-dev,kube_tag=v1.15.3,cloud_provider_tag=v1.15.0"
-  external_network: "{{ cumulus_network_internal_name }}"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.7,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
+  external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.15.3"
+  name: "kubernetes-1.14.7_as"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+
+cumulus_container_clusters_template_k8s_148:
+  public:
+  floating-ip-disabled:
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.8,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  master_lb_enabled:
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20190820"
+  name: "kubernetes-1.14.8_as"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
