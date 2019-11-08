@@ -778,8 +778,8 @@ cumulus_images:
   - "{{ cumulus_openSUSE_leap_15 }}"
 
 cumulus_fedora_atomic_29:
-  name: "FedoraAtomic29-20190820"
-  image_url: "https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-29-updates-20190820.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20190820.0.x86_64.qcow2"
+  name: "FedoraAtomic29-20191028"
+  image_url: "https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-29-updates-20191028.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20191028.0.x86_64.qcow2"
   properties:
     os_type: "linux"
     os_distro: "fedora-atomic"
@@ -914,8 +914,6 @@ cumulus_systemd_modules_load_ipoib: |
 
 cumulus_container_clusters_templates:
   - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
-  - "{{ cumulus_container_clusters_template_k8s_146 }}"
-  - "{{ cumulus_container_clusters_template_k8s_147 }}"
   - "{{ cumulus_container_clusters_template_k8s_148 }}"
 
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
@@ -924,40 +922,10 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190820"
+  image: "FedoraAtomic29-20191028"
   name: "swarm"
   coe: "swarm-mode"
   network_driver: "docker"
-  docker_storage_driver: "overlay2"
-  server_type: "vm"
-
-cumulus_container_clusters_template_k8s_146:
-  public:
-  floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
-  master_lb_enabled:
-  external_network: "{{ cumulus_network_internet_name }}"
-  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
-  flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.14.6_as"
-  coe: "kubernetes"
-  network_driver: "flannel"
-  docker_storage_driver: "overlay2"
-  server_type: "vm"
-
-cumulus_container_clusters_template_k8s_147:
-  public:
-  floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.7,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
-  master_lb_enabled:
-  external_network: "{{ cumulus_network_internet_name }}"
-  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
-  flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190820"
-  name: "kubernetes-1.14.7_as"
-  coe: "kubernetes"
-  network_driver: "flannel"
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
@@ -969,7 +937,7 @@ cumulus_container_clusters_template_k8s_148:
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20190820"
+  image: "FedoraAtomic29-20191028"
   name: "kubernetes-1.14.8_as"
   coe: "kubernetes"
   network_driver: "flannel"
