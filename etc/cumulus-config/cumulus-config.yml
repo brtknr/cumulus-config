@@ -914,7 +914,8 @@ cumulus_systemd_modules_load_ipoib: |
 
 cumulus_container_clusters_templates:
   - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
-  - "{{ cumulus_container_clusters_template_k8s_146 }}"
+  - "{{ cumulus_container_clusters_template_k8s_146_nginx_as }}"
+  - "{{ cumulus_container_clusters_template_k8s_146_traefik_as }}"
   - "{{ cumulus_container_clusters_template_k8s_146_octavia_as }}"
 
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
@@ -930,7 +931,22 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_146:
+cumulus_container_clusters_template_k8s_146_nginx_as:
+  public:
+  #floating-ip-disabled: need octavia to avoid this
+  labels: "cgroup_driver=cgroupfs,ingress_controller=nginx,nginx_ingress_controller_tag=0.24.1,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  #master_lb_enabled: need octavia?
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20191028"
+  name: "kubernetes-1.14.6_nginx_as"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+
+cumulus_container_clusters_template_k8s_traefik_146_as:
   public:
   #floating-ip-disabled: need octavia to avoid this
   labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
@@ -939,7 +955,7 @@ cumulus_container_clusters_template_k8s_146:
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
   image: "FedoraAtomic29-20191028"
-  name: "kubernetes-1.14.6_as"
+  name: "kubernetes-1.14.6_traefik_as"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
