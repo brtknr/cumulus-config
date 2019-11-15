@@ -692,9 +692,10 @@ cumulus_flavors:
 
 cumulus_flavor_octavia_small:
   name: "octavia.small"
-  ram: 1024
-  disk: 20
   vcpus: 1
+  ram: 1024
+  disk: 5
+  ephemeral: 0
   is_public: false
 
 cumulus_flavor_general_xlarge:
