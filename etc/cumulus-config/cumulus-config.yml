@@ -16,6 +16,7 @@ cumulus_projects:
   - "{{ cumulus_iris_vcycle }}"
   - "{{ cumulus_iris_casu }}"
   - "{{ cumulus_iris_ccfe }}"
+  - "{{ cumulus_iris_ska }}"
   - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_demo_project }}"
   - "{{ cumulus_services_project }}"
@@ -247,6 +248,28 @@ cumulus_iris_ccfe_users:
      roles: "{{ cumulus_user_roles }}"
    - name: "pfb29@cam.ac.uk"
      email: "pfb29@cam.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+
+cumulus_iris_ska:
+  name: iris-ska
+  description: IRIS@Cambridge SKA
+  project_domain: Default
+  users: "{{ cumulus_iris_ska_users }}"
+  user_domain: "{{ federated_domain }}"
+  quotas: "{{ iris_tiny_quota }}"
+
+cumulus_iris_ska_users:
+   - name: "jgarbutt"
+     email: "johng@stackhpc.com"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "pfb29@cam.ac.uk"
+     email: "pfb29@cam.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "r.joshi@skatelescope.org"
+     email: "r.joshi@skatelescope.org"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
 
