@@ -16,7 +16,11 @@ cumulus_projects:
   - "{{ cumulus_iris_vcycle }}"
   - "{{ cumulus_iris_casu }}"
   - "{{ cumulus_iris_ccfe }}"
+<<<<<<< HEAD
   - "{{ cumulus_iris_ral_dtaas }}"
+=======
+  - "{{ cumulus_iris_ska }}"
+>>>>>>> ccf510007ad7b63affd016e9ccfc9d582ec6a3b4
   - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_demo_project }}"
   - "{{ cumulus_services_project }}"
@@ -264,7 +268,7 @@ cumulus_iris_ral_dtaas_users:
 #     email: "frazzlework@gmail.com."
 #     password: "{{ federated_user_default_password }}"
 #     roles: "{{ cumulus_user_roles }}"
-
+#
 cumulus_iris_ral_dtaas:
   name: iris-ral-dtaas
   description: IRIS@Cambridge RAL DTaaS
@@ -279,6 +283,36 @@ cumulus_iris_ral_dtaas:
     routers: 1
     ports: 20
     volumes: 10
+
+cumulus_iris_ska:
+  name: iris-ska
+  description: IRIS@Cambridge SKA
+  project_domain: Default
+  users: "{{ cumulus_iris_ska_users }}"
+  user_domain: "{{ federated_domain }}"
+  quotas: "{{ iris_tiny_quota }}"
+
+cumulus_iris_ska_users:
+   - name: "jgarbutt"
+     email: "johng@stackhpc.com"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "pfb29@cam.ac.uk"
+     email: "pfb29@cam.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "r.joshi@skatelescope.org"
+     email: "r.joshi@skatelescope.org"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "b.mort@skatelescope.org"
+     email: "b.mort@skatelescope.org"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "j.collinson@skatelescope.org"
+     email: "j.collinson@skatelescope.org"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
 
 # Definition of the cumulus demo project. Format is as required by the
 # stackhpc.os-projects role.
@@ -878,7 +912,9 @@ cumulus_flavor_bm_dirac25y:
 
 cumulus_images:
   - "{{ cumulus_centos_7 }}"
+  - "{{ cumulus_centos_8 }}"
   - "{{ cumulus_fedora_atomic_29 }}"
+  - "{{ cumulus_fedora_coreos_31 }}"
   - "{{ cumulus_cirros }}"
   - "{{ cumulus_debian_9 }}"
   - "{{ cumulus_fedora_30 }}"
@@ -886,12 +922,20 @@ cumulus_images:
   - "{{ cumulus_openSUSE_leap_15 }}"
 
 cumulus_fedora_atomic_29:
-  name: "FedoraAtomic29-20191028"
-  image_url: "https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-29-updates-20191028.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20191028.0.x86_64.qcow2"
+  name: "FedoraAtomic29-20191126"
+  image_url: "https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-29-updates-20191126.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20191126.0.x86_64.qcow2"
   properties:
     os_type: "linux"
     os_distro: "fedora-atomic"
     os_version: "29"
+
+cumulus_fedora_coreos_31:
+  name: "FedoraCoreOS31-20200118"
+  image_url: "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/31.20200118.3.0/x86_64/fedora-coreos-31.20200118.3.0-openstack.x86_64.qcow2.xz"
+  properties:
+    os_type: "linux"
+    os_distro: "fedora-coreos"
+    os_version: "31"
 
 cumulus_centos_7:
   name: "CentOS7-1907"
@@ -900,6 +944,18 @@ cumulus_centos_7:
     os_type: "linux"
     os_distro: "centos"
     os_version: "7.0"
+    hw_scsi_model: "virtio-scsi"
+    hw_disk_bus: "scsi"
+    hw_vif_model: "virtio"
+    hw_vif_multiqueue_enabled: "true"
+
+cumulus_centos_8:
+  name: "CentOS8-1911"
+  image_url: "https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2"
+  properties:
+    os_type: "linux"
+    os_distro: "centos"
+    os_version: "8.0"
     hw_scsi_model: "virtio-scsi"
     hw_disk_bus: "scsi"
     hw_vif_model: "virtio"
@@ -1021,10 +1077,11 @@ cumulus_systemd_modules_load_ipoib: |
   mlx4_ib
 
 cumulus_container_clusters_templates:
-  - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
-  - "{{ cumulus_container_clusters_template_k8s_146_nginx_as }}"
-  - "{{ cumulus_container_clusters_template_k8s_146_traefik_as }}"
-  - "{{ cumulus_container_clusters_template_k8s_146_octavia_as }}"
+#  - "{{ cumulus_container_clusters_template_swarm_fedora_atomic_27 }}"
+#  - "{{ cumulus_container_clusters_template_k8s_146 }}"
+  - "{{ cumulus_container_clusters_template_k8s_172 }}"
+  - "{{ cumulus_container_clusters_template_k8s_166 }}"
+  - "{{ cumulus_container_clusters_template_k8s_159 }}"
 
 cumulus_container_clusters_template_swarm_fedora_atomic_27:
   public:
@@ -1039,47 +1096,65 @@ cumulus_container_clusters_template_swarm_fedora_atomic_27:
   docker_storage_driver: "overlay2"
   server_type: "vm"
 
-cumulus_container_clusters_template_k8s_146_nginx_as:
-  public:
-  #floating-ip-disabled: need octavia to avoid this
-  labels: "cgroup_driver=cgroupfs,ingress_controller=nginx,nginx_ingress_controller_tag=0.24.1,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
-  #master_lb_enabled: need octavia?
-  external_network: "{{ cumulus_network_internal_name }}"
-  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
-  flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20191028"
-  name: "kubernetes-1.14.6_nginx_as"
-  coe: "kubernetes"
-  network_driver: "flannel"
-  docker_storage_driver: "overlay2"
-  server_type: "vm"
-
-cumulus_container_clusters_template_k8s_146_traefik_as:
-  public:
-  #floating-ip-disabled: need octavia to avoid this
-  labels: "cgroup_driver=cgroupfs,ingress_controller=traefik,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
-  #master_lb_enabled: need octavia?
-  external_network: "{{ cumulus_network_internal_name }}"
-  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
-  flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20191028"
-  name: "kubernetes-1.14.6_traefik_as"
-  coe: "kubernetes"
-  network_driver: "flannel"
-  docker_storage_driver: "overlay2"
-  server_type: "vm"
-
-cumulus_container_clusters_template_k8s_146_octavia_as:
+cumulus_container_clusters_template_k8s_146:
   public:
   floating-ip-disabled:
-  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0"
+  labels: "cgroup_driver=cgroupfs,ingress_controller=octavia,monitoring_enabled=true,tiller_enabled=true,heat_container_agent_tag=train-stable-1,kube_tag=v1.14.6,cloud_provider_tag=v1.14.0,min_node_count=1,max_node_count=5,master_lb_floating_ip_enabled=true,auto_scaling_enabled=true,tiller_tag=v2.14.3,autoscaler_tag=v1.0,volume_driver=cinder"
   master_lb_enabled:
   external_network: "{{ cumulus_network_internet_name }}"
   master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
   flavor: "{{ cumulus_flavor_general_small.name }}"
-  image: "FedoraAtomic29-20191028"
-  name: "kubernetes-1.14.6_octavia_as"
+  image: "FedoraAtomic29-20191126"
+  name: "kubernetes-1.14.6-20200203"
   coe: "kubernetes"
   network_driver: "flannel"
   docker_storage_driver: "overlay2"
   server_type: "vm"
+
+cumulus_container_clusters_template_k8s_172:
+  public:
+  floating-ip-disabled:
+  master_lb_enabled:
+  labels: "auto_healing_controller=magnum-auto-healer,tiller_tag=v2.16.1,max_node_count=4,min_node_count=1,cloud_provider_tag=v1.17.0,etcd_tag=3.3.17,monitoring_enabled=true,heat_container_agent_tag=train-stable-1,tiller_enabled=true,auto_scaling_enabled=true,master_lb_floating_ip_enabled=true,use_podman=true,auto_healing_enabled=true,kube_tag=v1.17.2,autoscaler_tag=v1.15.2"
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20191126"
+  name: "kubernetes-1.17.2-20200205"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+  volume_driver: "cinder"
+
+cumulus_container_clusters_template_k8s_166:
+  public:
+  floating-ip-disabled:
+  master_lb_enabled:
+  labels: "auto_healing_controller=magnum-auto-healer,tiller_tag=v2.16.1,max_node_count=4,min_node_count=1,cloud_provider_tag=v1.16.0,etcd_tag=3.3.17,monitoring_enabled=true,heat_container_agent_tag=train-stable-1,tiller_enabled=true,auto_scaling_enabled=true,master_lb_floating_ip_enabled=true,use_podman=true,auto_healing_enabled=true,kube_tag=v1.16.6,autoscaler_tag=v1.15.2"
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20191126"
+  name: "kubernetes-1.16.6-20200205"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+  volume_driver: "cinder"
+
+cumulus_container_clusters_template_k8s_159:
+  public:
+  floating-ip-disabled:
+  master_lb_enabled:
+  labels: "auto_healing_controller=magnum-auto-healer,tiller_tag=v2.16.1,max_node_count=4,min_node_count=1,cloud_provider_tag=v1.15.0,etcd_tag=3.3.17,monitoring_enabled=true,heat_container_agent_tag=train-stable-1,tiller_enabled=true,auto_scaling_enabled=true,master_lb_floating_ip_enabled=true,use_podman=true,auto_healing_enabled=true,kube_tag=v1.15.9,autoscaler_tag=v1.15.2"
+  external_network: "{{ cumulus_network_internet_name }}"
+  master_flavor: "{{ cumulus_flavor_general_tiny.name }}"
+  flavor: "{{ cumulus_flavor_general_small.name }}"
+  image: "FedoraAtomic29-20191126"
+  name: "kubernetes-1.15.9-20200205"
+  coe: "kubernetes"
+  network_driver: "flannel"
+  docker_storage_driver: "overlay2"
+  server_type: "vm"
+  volume_driver: "cinder"
