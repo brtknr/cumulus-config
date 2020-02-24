@@ -16,6 +16,7 @@ cumulus_projects:
   - "{{ cumulus_iris_vcycle }}"
   - "{{ cumulus_iris_casu }}"
   - "{{ cumulus_iris_ccfe }}"
+  - "{{ cumulus_iris_ral_dtaas }}"
   - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_demo_project }}"
   - "{{ cumulus_services_project }}"
@@ -249,6 +250,35 @@ cumulus_iris_ccfe_users:
      email: "pfb29@cam.ac.uk"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
+
+cumulus_iris_ral_dtaas_users:
+   - name: "pfb29@cam.ac.uk"
+     email: "pfb29@cam.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "raymond.millward@gmail.com)"
+     email: "raymond.millward@gmail.com)"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+#   - name: "frazzlework@gmail.com."
+#     email: "frazzlework@gmail.com."
+#     password: "{{ federated_user_default_password }}"
+#     roles: "{{ cumulus_user_roles }}"
+
+cumulus_iris_ral_dtaas:
+  name: iris-ral-dtaas
+  description: IRIS@Cambridge RAL DTaaS
+  project_domain: Default
+  users: "{{ cumulus_iris_ral_dtaas_users }}"
+  user_domain: "{{ federated_domain }}"
+  quotas:
+    instances: 10
+    cores: 10
+    ram: 30720 # 5x6GB=30GB
+    floating_ips: 2
+    routers: 1
+    ports: 20
+    volumes: 10
 
 # Definition of the cumulus demo project. Format is as required by the
 # stackhpc.os-projects role.
