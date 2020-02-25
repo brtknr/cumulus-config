@@ -16,11 +16,8 @@ cumulus_projects:
   - "{{ cumulus_iris_vcycle }}"
   - "{{ cumulus_iris_casu }}"
   - "{{ cumulus_iris_ccfe }}"
-<<<<<<< HEAD
   - "{{ cumulus_iris_ral_dtaas }}"
-=======
   - "{{ cumulus_iris_ska }}"
->>>>>>> ccf510007ad7b63affd016e9ccfc9d582ec6a3b4
   - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_demo_project }}"
   - "{{ cumulus_services_project }}"
@@ -264,11 +261,11 @@ cumulus_iris_ral_dtaas_users:
      email: "raymond.millward@gmail.com)"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
-#   - name: "frazzlework@gmail.com."
-#     email: "frazzlework@gmail.com."
-#     password: "{{ federated_user_default_password }}"
-#     roles: "{{ cumulus_user_roles }}"
-#
+   - name: "frazzlework@gmail.com."
+     email: "frazzlework@gmail.com."
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+
 cumulus_iris_ral_dtaas:
   name: iris-ral-dtaas
   description: IRIS@Cambridge RAL DTaaS
