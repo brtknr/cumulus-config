@@ -314,8 +314,8 @@ cumulus_iris_ska_users:
      email: "j.collinson@skatelescope.org"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
-   - name: "R.Barnsley@skatelescope.org"
-     email: "R.Barnsley@skatelescope.org"
+   - name: "r.barnsley@skatelescope.org"
+     email: "r.barnsley@skatelescope.org"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
 
