@@ -150,7 +150,7 @@ cumulus_iris_gaia_test:
     routers: 3
     ports: 500
     volumes: 20
-    gigabytes: 512
+    gigabytes: 5120
 
 cumulus_iris_gaia_prod:
   name: iris-gaia-prod
@@ -166,7 +166,7 @@ cumulus_iris_gaia_prod:
     routers: 3
     ports: 500
     volumes: 20
-    gigabytes: 512
+    gigabytes: 5120
 
 cumulus_iris_gaia_users:
    - name: "pfb29@cam.ac.uk"
