@@ -314,6 +314,10 @@ cumulus_iris_ska_users:
      email: "j.collinson@skatelescope.org"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
+   - name: "r.barnsley@skatelescope.org"
+     email: "r.barnsley@skatelescope.org"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
 
 # Definition of the cumulus demo project. Format is as required by the
 # stackhpc.os-projects role.
