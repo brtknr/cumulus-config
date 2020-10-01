@@ -94,7 +94,7 @@ cumulus_iris_euclid:
   users: "{{ cumulus_iris_euclid_users }}"
   user_domain: "{{ federated_domain }}"
   quotas:
-    instances: 42
+    instances: -1
     cores: 1152
     ram: 5120000 # 5000GB
     floating_ips: 3
@@ -839,6 +839,11 @@ cumulus_flavors:
   - "{{ cumulus_flavor_general_tiny }}"
   - "{{ cumulus_flavor_lsst_medium }}"
   - "{{ cumulus_flavor_bm_dirac25y }}"
+#  - "{{ cumulus_flavor_cclake_opt_tiny }}"
+#  - "{{ cumulus_flavor_cclake_opt_small }}"
+#  - "{{ cumulus_flavor_cclake_opt_medium }}"
+  - "{{ cumulus_flavor_cclake_opt_large }}"
+#  - "{{ cumulus_flavor_cclake_opt_xlarge }}"
 
 cumulus_flavor_octavia_small:
   name: "octavia.small"
@@ -915,6 +920,30 @@ cumulus_flavor_bm_dirac25y:
     "resources:VCPU": 0
     "resources:MEMORY_MB": 0
     "resources:DISK_GB": 0
+
+cumulus_flavor_cclake_opt_large:
+  name: "cclake.opt.v1.large"
+  vcpus: 54
+  ram: 92160
+  disk: 20
+  ephemeral: 160
+  is_public: false
+  extra_specs:
+    "trait:HW_CPU_HYPERTHREADING": "required"
+    "hw_rng:allowed": "True"
+#    "hw:mem_page_size": large
+    "hw:numa_nodes": "1"
+#   "hw:pci_numa_affinity_policy": required
+    "hw:cpu_policy": "dedicated"
+#    "hw:cpu_thread_policy": "require"
+    "hw:emulator_threads_policy": "share"
+    "hw:cpu_sockets": 1
+    "hw:cpu_cores": 27
+    "hw:cpu_threads": 2
+    "hw:cpu_maxsockets": 1
+    "hw:cpu_maxcores": 27
+    "hw:cpu_maxthreads": 2
+
 
 ###############################################################################
 # Software images for cumulus
