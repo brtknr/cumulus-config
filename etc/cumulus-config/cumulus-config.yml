@@ -95,8 +95,8 @@ cumulus_iris_euclid:
   user_domain: "{{ federated_domain }}"
   quotas:
     instances: -1
-    cores: 1152
-    ram: 5120000 # 5000GB
+    cores: 2304
+    ram: 10240000 # 1TB
     floating_ips: 3
     routers: 3
     ports: 500
@@ -128,10 +128,10 @@ cumulus_iris_gaia_dev:
   user_domain: "{{ federated_domain }}"
   quotas:
     instances: 20
-    cores: 200
-    ram: 512000 # 500GB
-    floating_ips: 3
-    routers: 3
+    cores: 400
+    ram: 786432 # 768GB
+    floating_ips: 6
+    routers: 4
     ports: 500
     volumes: 20
     gigabytes: 5120
@@ -144,10 +144,10 @@ cumulus_iris_gaia_test:
   user_domain: "{{ federated_domain }}"
   quotas:
     instances: 20
-    cores: 200
-    ram: 512000 # 500GB
-    floating_ips: 3
-    routers: 3
+    cores: 400
+    ram: 786432 # 768GB
+    floating_ips: 6
+    routers: 4
     ports: 500
     volumes: 20
     gigabytes: 5120
@@ -160,10 +160,10 @@ cumulus_iris_gaia_prod:
   user_domain: "{{ federated_domain }}"
   quotas:
     instances: 20
-    cores: 200
-    ram: 512000 # 500GB
-    floating_ips: 3
-    routers: 3
+    cores: 400
+    ram: 786432 # 768GB
+    floating_ips: 6
+    routers: 4
     ports: 500
     volumes: 20
     gigabytes: 5120
@@ -842,7 +842,8 @@ cumulus_flavors:
 #  - "{{ cumulus_flavor_cclake_opt_tiny }}"
 #  - "{{ cumulus_flavor_cclake_opt_small }}"
 #  - "{{ cumulus_flavor_cclake_opt_medium }}"
-  - "{{ cumulus_flavor_cclake_opt_large }}"
+  - "{{ cumulus_flavor_cclake_opt_large_2MB }}"
+  - "{{ cumulus_flavor_cclake_opt_large_1GB }}"
 #  - "{{ cumulus_flavor_cclake_opt_xlarge }}"
 
 cumulus_flavor_octavia_small:
@@ -921,17 +922,40 @@ cumulus_flavor_bm_dirac25y:
     "resources:MEMORY_MB": 0
     "resources:DISK_GB": 0
 
-cumulus_flavor_cclake_opt_large:
-  name: "cclake.opt.v1.large"
+cumulus_flavor_cclake_opt_large_2MB:
+  name: "cclake.opt.v1.large.2MB"
   vcpus: 54
-  ram: 92160
+  ram: 88064
   disk: 20
-  ephemeral: 160
+  ephemeral: 380
   is_public: false
   extra_specs:
     "trait:HW_CPU_HYPERTHREADING": "required"
     "hw_rng:allowed": "True"
-#    "hw:mem_page_size": large
+    "hw:mem_page_size": "2MB"
+    "hw:numa_nodes": "1"
+#   "hw:pci_numa_affinity_policy": required
+    "hw:cpu_policy": "dedicated"
+#    "hw:cpu_thread_policy": "require"
+    "hw:emulator_threads_policy": "share"
+    "hw:cpu_sockets": 1
+    "hw:cpu_cores": 27
+    "hw:cpu_threads": 2
+    "hw:cpu_maxsockets": 1
+    "hw:cpu_maxcores": 27
+    "hw:cpu_maxthreads": 2
+
+cumulus_flavor_cclake_opt_large_1GB:
+  name: "cclake.opt.v1.large.1GB"
+  vcpus: 54
+  ram: 88064
+  disk: 20
+  ephemeral: 380
+  is_public: false
+  extra_specs:
+    "trait:HW_CPU_HYPERTHREADING": "required"
+    "hw_rng:allowed": "True"
+    "hw:mem_page_size": "1GB"
     "hw:numa_nodes": "1"
 #   "hw:pci_numa_affinity_policy": required
     "hw:cpu_policy": "dedicated"
