@@ -95,7 +95,7 @@ cumulus_iris_euclid:
   user_domain: "{{ federated_domain }}"
   quotas:
     instances: -1
-    cores: 2304
+    cores: 1600
     ram: 10240000 # 1TB
     floating_ips: 3
     routers: 3
