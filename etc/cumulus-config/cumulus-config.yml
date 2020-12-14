@@ -18,6 +18,7 @@ cumulus_projects:
   - "{{ cumulus_iris_ccfe }}"
   - "{{ cumulus_iris_ral_dtaas }}"
   - "{{ cumulus_iris_ska }}"
+  - "{{ cumulus_iris_jhub_da }}"
   - "{{ cumulus_rcp_dev_project }}"
   - "{{ cumulus_demo_project }}"
   - "{{ cumulus_services_project }}"
@@ -320,6 +321,32 @@ cumulus_iris_ska_users:
      roles: "{{ cumulus_user_roles }}"
    - name: "a.clarke@skatelescope.org"
      email: "a.clarke@skatelescope.org"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+
+cumulus_iris_jhub_da:
+  name: iris-jhub-da
+  description: IRIS@Cambridge JupyterHub DA 2020
+  project_domain: Default
+  users: "{{ cumulus_iris_jhub_da_users }}"
+  user_domain: "{{ federated_domain }}"
+  quotas: "{{ iris_tiny_quota }}"
+
+cumulus_iris_jhub_da_users:
+   - name: "jgarbutt"
+     email: "johng@stackhpc.com"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "pfb29@cam.ac.uk"
+     email: "pfb29@cam.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "g.francis"
+     email: "g.francis@epcc.ed.ac.uk"
+     password: "{{ federated_user_default_password }}"
+     roles: "{{ cumulus_user_roles }}"
+   - name: "millingworth"
+     email: "malcolm.illingworth@gmail.com"
      password: "{{ federated_user_default_password }}"
      roles: "{{ cumulus_user_roles }}"
 
