@@ -46,7 +46,7 @@ iris_small_quota:
 
 iris_tiny_quota:
   instances: 10
-  cores: 10
+  cores: 12
   ram: 98304 # 96GB
   floating_ips: 3
   routers: 2
